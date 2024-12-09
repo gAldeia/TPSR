@@ -1,15 +1,24 @@
 from torch import nn
 import torch
+import os
 import numpy as np
 from symbolicregression.model.model_wrapper import ModelWrapper
 from symbolicregression.model.sklearn_wrapper import SymbolicTransformerRegressor , get_top_k_features
 import time 
 
+model_path = os.path.join( # model in bind folder
+    "/srbench_pretrained/",
+    "model1.pt" 
+)
 
 class Transformer(nn.Module):
     def __init__(self, params, env, samples):
         super().__init__()
-        self.model = torch.load('./symbolicregression/weights/model.pt')
+        if not torch.cuda.is_available():
+            e2et_model = torch.load(model_path, map_location=torch.device('cpu'))
+        else:
+            self.model = torch.load(model_path)
+        
         self.first_dropout = nn.Dropout(0.1)
         self.params = params
         self.env = env
