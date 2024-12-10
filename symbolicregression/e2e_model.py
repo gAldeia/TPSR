@@ -15,7 +15,7 @@ class Transformer(nn.Module):
     def __init__(self, params, env, samples):
         super().__init__()
         if not torch.cuda.is_available():
-            e2et_model = torch.load(model_path, map_location=torch.device('cpu'))
+            self.model = torch.load(model_path, map_location=torch.device('cpu'))
         else:
             self.model = torch.load(model_path)
         
